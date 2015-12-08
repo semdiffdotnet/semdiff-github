@@ -33,6 +33,7 @@ namespace SemDiffAnalyzer
         //0 is name of file, 1 is title of pull request, 2 is url of pull request //Actual error message text (formatable string)
         //There is a option to show this in the error list for more info
         private static DiagnosticDescriptor FalsePositive = new DiagnosticDescriptor(DiagnosticId, FalsePositiveTitle, FalsePositiveMessageFormat, Category, DiagnosticSeverity.Warning, isEnabledByDefault: true, description: FalsePositiveDescription);
+
         public ImmutableArray<DiagnosticDescriptor> GetSupportedDiagnostics()
         {
             return ImmutableArray.Create(FalsePositive, FalseNegative);

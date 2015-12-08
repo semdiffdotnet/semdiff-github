@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DiagnosticAnalyzer.cs" />
+    <Compile Include="SemDiffRepo.cs" />
     <Compile Include="SemDiffDiagnostics.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.Designer.cs">
@@ -38,6 +39,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SemDiffGitHubRepo.cs" />
     <Compile Include="SemDiffRepoManager.cs" />
   </ItemGroup>
   <ItemGroup>

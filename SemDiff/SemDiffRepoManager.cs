@@ -1,31 +1,26 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace SemDiffAnalyzer
 {
     public class SemDiffRepoManager
     {
-        public TimeSpan UpdateTimeLimit { get; } = TimeSpan.FromHours(0.5);
-        private DateTime? LastUpdate { get; set; }
-        private static ConcurrentDictionary<string, SemDiffRepoManager> ManagerLookup = new ConcurrentDictionary<string, SemDiffRepoManager>();
+        private ConcurrentDictionary<string, SemDiffRepo> ManagerLookup = new ConcurrentDictionary<string, SemDiffRepo>();
 
         //given a the path of a file in the repo, get a repo manager
-        public static SemDiffRepoManager GetRepoFor(string filePath)
+        public SemDiffRepo GetRepoFor(string filePath)
         {
             var rm = ManagerLookup.GetOrAdd(Path.GetDirectoryName(filePath), AddLookupEntry);
-
             if (rm != null)
                 rm.TriggerUpdate();
             return rm;
         }
 
-        private static Regex _locateGitHubUrl = new Regex(@"https:\/\/github\.com\/(.*)\/(.*)\.git");
+        private Regex _locateGitHubUrl = new Regex(@"https:\/\/github\.com\/(.*)\/(.*)\.git");
 
-        private static SemDiffRepoManager AddLookupEntry(string filePath)
+        private SemDiffRepo AddLookupEntry(string filePath)
         {
             var gitdir = Path.Combine(filePath, ".git");
             if (Directory.Exists(gitdir) && File.Exists(Path.Combine(gitdir, "config")))
@@ -43,7 +38,7 @@ namespace SemDiffAnalyzer
                 //We need to actually add it with the base path so that other directories can walk up and find it
                 return ManagerLookup.GetOrAdd(filePath, s =>
                 {
-                    var rm = new SemDiffRepoManager();
+                    var rm = new SemDiffGitHubRepo();
                     return rm;
                 });
             }
@@ -58,19 +53,6 @@ namespace SemDiffAnalyzer
                 }
                 return ManagerLookup.GetOrAdd(parent, AddLookupEntry);
             }
-        }
-
-        public void TriggerUpdate()
-        {
-            if (!LastUpdate.HasValue || DateTime.Now > LastUpdate + UpdateTimeLimit)
-            {
-                Update();
-            }
-        }
-        private void Update()
-        {
-            //After success
-            LastUpdate = DateTime.Now;
         }
     }
 }
