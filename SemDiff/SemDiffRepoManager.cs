@@ -38,7 +38,7 @@ namespace SemDiffAnalyzer
                 //We need to actually add it with the base path so that other directories can walk up and find it
                 return ManagerLookup.GetOrAdd(filePath, s =>
                 {
-                    var rm = new SemDiffGitHubRepo();
+                    var rm = new SemDiffGitHubRepo(user, repo);
                     return rm;
                 });
             }
