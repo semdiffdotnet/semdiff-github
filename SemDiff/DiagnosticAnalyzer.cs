@@ -11,29 +11,28 @@ namespace SemDiffAnalyzer
     {
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => Diagnostics.GetSupportedDiagnostics();
         private SemDiffDiagnostics Diagnostics { get; } = new SemDiffDiagnostics();
-        private SemDiffRepoManager RepoManager { get; set; }
 
+        //Called once per solution, to provide us an oportunity to assign callbacks
         public override void Initialize(AnalysisContext context)
         {
-            RepoManager = SemDiffRepoManager.GetRepo();
-            context.RegisterCompilationStartAction(OnCompilationStart);
-        }
-
-        private void OnCompilationStart(CompilationStartAnalysisContext context)
-        {
-            RepoManager.TriggerUpdate();
             context.RegisterSyntaxTreeAction(OnSyntaxTree);
             context.RegisterSemanticModelAction(OnSemanticModel);
-        }
+        }        
 
         private void OnSemanticModel(SemanticModelAnalysisContext obj)
         {
-            throw new NotImplementedException();
+            var filePath = obj.SemanticModel.SyntaxTree.FilePath;
+            var repoManager = SemDiffRepoManager.GetRepoFor(filePath);
+            if (repoManager == null)
+                return;
         }
 
         private void OnSyntaxTree(SyntaxTreeAnalysisContext obj)
         {
-            throw new NotImplementedException();
+            var filePath = obj.Tree.FilePath;
+            var repoManager = SemDiffRepoManager.GetRepoFor(filePath);
+            if (repoManager == null)
+                return;
         }
     }
 }
