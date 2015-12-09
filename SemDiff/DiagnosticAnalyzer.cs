@@ -2,7 +2,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
 
-namespace SemDiffAnalyzer
+namespace SemDiff
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class SemDiffAnalyzer : DiagnosticAnalyzer

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SemDiffAnalyzer {
+namespace SemDiff {
     using System;
     
     

@@ -1,4 +1,4 @@
-﻿namespace SemDiffAnalyzer
+﻿namespace SemDiff
 {
     internal class PullRequest
     {

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace SemDiffAnalyzer
+namespace SemDiff
 {
     internal class SemDiffGitHubRepo : SemDiffRepo
     {
@@ -24,7 +24,7 @@ namespace SemDiffAnalyzer
             {
                 BaseAddress = new Uri("https://api.github.com/")
             };
-            Http.DefaultRequestHeaders.UserAgent.ParseAdd("SemDiff");
+            Http.DefaultRequestHeaders.UserAgent.ParseAdd(nameof(SemDiff));
         }
 
         protected override void Update()

@@ -1,7 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using System.Collections.Immutable;
 
-namespace SemDiffAnalyzer
+namespace SemDiff
 {
     /// <summary>
     /// The Diagnostics class manages issues related to reporting diagnostics. This will include transforming data from our analysis into actual messages to the user and the enumeration of our supported diagnostics
@@ -9,7 +9,7 @@ namespace SemDiffAnalyzer
     internal class SemDiffDiagnostics
     {
         //Shared Values
-        public const string DiagnosticId = "SemDiff"; //Like the error code (just like missing semicolon is CS1002)
+        public const string DiagnosticId = nameof(SemDiff); //Like the error code (just like missing semicolon is CS1002)
 
         private const string Category = "Conflicts"; //Not sure where this shows up yet
 

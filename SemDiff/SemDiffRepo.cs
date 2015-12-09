@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SemDiffAnalyzer
+namespace SemDiff
 {
     public abstract class SemDiffRepo
     {

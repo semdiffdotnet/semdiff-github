@@ -14,8 +14,8 @@
     <ProjectGuid>{0E57C2FC-4F39-409F-A5D0-86023242E3B0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SemDiffAnalyzer.Vsix</RootNamespace>
-    <AssemblyName>SemDiffAnalyzer.Vsix</AssemblyName>
+    <RootNamespace>SemDiff.Vsix</RootNamespace>
+    <AssemblyName>SemDiff.Vsix</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <GeneratePkgDefFile>false</GeneratePkgDefFile>
     <IncludeAssemblyInVSIXContainer>false</IncludeAssemblyInVSIXContainer>

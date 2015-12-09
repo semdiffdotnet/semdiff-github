@@ -1,7 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Newtonsoft.Json;
 
-namespace SemDiffAnalyzer
+namespace SemDiff
 {
     public class Files
     {

@@ -8,8 +8,8 @@
     <ProjectGuid>{DA1659BB-D571-4CBF-A17A-27C4561B40A4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SemDiffAnalyzer.Test</RootNamespace>
-    <AssemblyName>SemDiffAnalyzer.Test</AssemblyName>
+    <RootNamespace>SemDiff.Test</RootNamespace>
+    <AssemblyName>SemDiff.Test</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

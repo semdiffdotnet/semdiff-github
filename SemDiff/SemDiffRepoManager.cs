@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace SemDiffAnalyzer
+namespace SemDiff
 {
     public class SemDiffRepoManager
     {
