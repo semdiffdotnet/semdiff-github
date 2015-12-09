@@ -15,12 +15,15 @@ namespace SemDiffAnalyzer
         public string UserName { get; }
         public string RepoName { get; }
         public List<PullRequest> PullRequests { get; } = new List<PullRequest>();
+
         public SemDiffGitHubRepo(string username, string reponame)
         {
             UserName = username;
             RepoName = reponame;
-            Http = new HttpClient();
-            Http.BaseAddress = new Uri("https://api.github.com/");
+            Http = new HttpClient
+            {
+                BaseAddress = new Uri("https://api.github.com/")
+            };
             Http.DefaultRequestHeaders.UserAgent.ParseAdd("SemDiff");
         }
 
@@ -51,7 +54,7 @@ namespace SemDiffAnalyzer
                         p.Files = await Task.WhenAll(files.Where(f => f.FileName.EndsWith(".cs")).Select(async f =>
                         {
                             var r = await Http.GetAsync(f.Url);
-                            if(r.IsSuccessStatusCode)
+                            if (r.IsSuccessStatusCode)
                             {
                                 var file_content = await r.Content.ReadAsStringAsync();
                                 f.SyntaxTree = CSharpSyntaxTree.ParseText(file_content);

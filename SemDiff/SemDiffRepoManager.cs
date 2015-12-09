@@ -7,7 +7,7 @@ namespace SemDiffAnalyzer
 {
     public class SemDiffRepoManager
     {
-        private ConcurrentDictionary<string, SemDiffRepo> ManagerLookup = new ConcurrentDictionary<string, SemDiffRepo>();
+        private readonly ConcurrentDictionary<string, SemDiffRepo> ManagerLookup = new ConcurrentDictionary<string, SemDiffRepo>();
 
         //given a the path of a file in the repo, get a repo manager
         public SemDiffRepo GetRepoFor(string filePath)
@@ -18,7 +18,7 @@ namespace SemDiffAnalyzer
             return rm;
         }
 
-        private Regex _locateGitHubUrl = new Regex(@"https:\/\/github\.com\/(.*)\/(.*)\.git");
+        private readonly Regex _locateGitHubUrl = new Regex(@"https:\/\/github\.com\/(.*)\/(.*)\.git");
 
         private SemDiffRepo AddLookupEntry(string filePath)
         {

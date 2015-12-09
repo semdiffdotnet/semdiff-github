@@ -5,9 +5,9 @@ using System.Collections.Immutable;
 namespace SemDiffAnalyzer
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class SemDiffAnalyzerAnalyzer : DiagnosticAnalyzer
+    public class SemDiffAnalyzer : DiagnosticAnalyzer
     {
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => Diagnostics.GetSupportedDiagnostics();
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => SemDiffDiagnostics.GetSupportedDiagnostics();
         private SemDiffDiagnostics Diagnostics { get; } = new SemDiffDiagnostics();
         private SemDiffRepoManager RepoManager { get; } = new SemDiffRepoManager();
 
