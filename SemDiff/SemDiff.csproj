@@ -32,6 +32,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DiagnosticAnalyzer.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="FalsePositiveAnalysis.cs" />
     <Compile Include="Files.cs" />
     <Compile Include="PullRequest.cs" />
     <Compile Include="SemDiffRepo.cs" />
