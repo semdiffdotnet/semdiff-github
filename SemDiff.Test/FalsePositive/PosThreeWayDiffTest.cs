@@ -1,4 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.IO;
+using System.Linq;
 
 namespace SemDiff.Test.FalsePositive
 {
@@ -20,9 +22,55 @@ namespace SemDiff.Test.FalsePositive
             var l = "return 2 * 4;".WrapWithMethod().Parse();
             var r = "return 2+4;".WrapWithMethod().Parse();
 
-            FP.ThreeWayDiff(a, l, r);
+            var cons = FP.ThreeWayDiff(a, l, r);
         }
 
+        [TestMethod]
+        public void PosThreeWayDiffSameSizeIntersectingSpansTest()
+        {
+            var a = "return abcd;".WrapWithMethod().Parse();
+            var l = "return efgh;".WrapWithMethod().Parse();
+            var r = "return ijkl;".WrapWithMethod().Parse();
+
+            var cons = FP.ThreeWayDiff(a, l, r);
+            var con_strs = cons.Select(c => c.ToString()).ToList();
+            Assert.AreEqual("<<<<<<<efgh|||||||abcd=======ijkl>>>>>>>", con_strs.Single());
+        }
+
+        [TestMethod]
+        public void PosThreeWayDiffLeftLargeIntersectingSpansTest()
+        {
+            var a = "return abcd;".WrapWithMethod().Parse();
+            var l = "return efghijkl;".WrapWithMethod().Parse();
+            var r = "return mnop;".WrapWithMethod().Parse();
+
+            var cons = FP.ThreeWayDiff(a, l, r);
+            var con_strs = cons.Select(c => c.ToString()).ToList();
+            Assert.AreEqual("<<<<<<<efghijkl|||||||abcd=======mnop>>>>>>>", con_strs.Single());
+        }
+
+        [TestMethod]
+        public void PosThreeWayDiffLeftDeleteIntersectingSpansTest()
+        {
+            var a = "return abcd;".WrapWithMethod().Parse();
+            var l = "return ;".WrapWithMethod().Parse();
+            var r = "return mnop;".WrapWithMethod().Parse();
+
+            var cons = FP.ThreeWayDiff(a, l, r);
+            var con_strs = cons.Select(c => c.ToString()).ToList();
+            Assert.AreEqual("<<<<<<<|||||||abcd=======mnop>>>>>>>", con_strs.Single());
+        }
+        [TestMethod]
+        public void PosThreeWayDiffCloseCloseNonIntersectingChangesSpansTest()
+        {
+            var a = "return abcd;".WrapWithMethod().Parse();
+            var l = "return aabcd;".WrapWithMethod().Parse();
+            var r = "return mnop;".WrapWithMethod().Parse();
+
+            var cons = FP.ThreeWayDiff(a, l, r);
+            var con_strs = cons.Select(c => c.ToString()).ToList();
+            Assert.AreEqual("<<<<<<<aabcd|||||||abcd=======mnop>>>>>>>", con_strs.Single());
+        }
         [TestMethod]
         public void PosThreeWayDiffThreewayOverlappingSpansTest()
         {
@@ -44,7 +92,8 @@ namespace SemDiff.Test.FalsePositive
                      return x*y/(z*w);
                      ".WrapWithMethod().Parse();
 
-            FP.ThreeWayDiff(a, l, r);
+            var cons = FP.ThreeWayDiff(a, l, r);
+            var con_strs = cons.Select(c => c.ToString()).ToList();
         }
 
         [TestMethod]
@@ -64,6 +113,18 @@ namespace SemDiff.Test.FalsePositive
                      ".WrapWithMethod().Parse();
 
             FP.ThreeWayDiff(a, l, r);
+        }
+
+        [TestMethod]
+        public void PosThreeWayDiffCurlyBrocTest()
+        {
+            var a = File.ReadAllText("AnalyseUser.orig.cs.txt").Parse();
+            var l = File.ReadAllText("AnalyseUser.cs.left.txt").Parse();
+            var r = File.ReadAllText("AnalyseUser.right.cs.txt").Parse();
+
+            var cons = FP.ThreeWayDiff(a, l, r);
+            var con_strs = cons.Select(c => c.ToString()).ToList();
+            Assert.IsTrue(con_strs.Any());
         }
     }
 }

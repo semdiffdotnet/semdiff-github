@@ -1,0 +1,4 @@
+Reorganize FalsePositiveAnalysis and rename to represent what it actually is: a three way diff
+Establish a way to walk through the syntax tree to get the node that surrounds the change, this will allow determining if the change is only whitespace
+Establish a way to walk up through the syntax tree to get the corisponding Syntax (especially MethodDeclarationSyntax and ClassDeclarationSyntax) that contains the change
+Need a way to determine that two change has moved a function (deleted in one place, added in another place)
