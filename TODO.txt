@@ -1,4 +1,12 @@
 Reorganize FalsePositiveAnalysis and rename to represent what it actually is: a three way diff
 Establish a way to walk through the syntax tree to get the node that surrounds the change, this will allow determining if the change is only whitespace
+
 Establish a way to walk up through the syntax tree to get the corisponding Syntax (especially MethodDeclarationSyntax and ClassDeclarationSyntax) that contains the change
+ * what if there is extra whitespace on the side of the method or class?
+ * what if two methods are moved? or a method is moved but stuff close to the declaration was also deleted?
 Need a way to determine that two change has moved a function (deleted in one place, added in another place)
+
+New method for getting relevant nodes from the syntax tree:
+ * Get all method declarations that overlap (or are contained) with the conflicting span
+ * Get all class declarations that overlap (or are contained) with the conflicting span
+ * Save the smallest trivia or syntax that covers the whole span (later we will excluse if it is entirely whitespace or a comment)

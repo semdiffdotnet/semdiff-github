@@ -1,9 +1,11 @@
 ﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace SemDiff
 {
@@ -212,6 +214,7 @@ namespace SemDiff
         {
             public string Text { get; set; }
             public SyntaxTree Tree { get; set; }
+            public MemberDeclarationSyntax ContainingNode { get; set; }
             public int Start { get; set; }
 
             public override string ToString()
@@ -219,13 +222,59 @@ namespace SemDiff
                 return Text;
             }
 
+            class NodeWalker : CSharpSyntaxWalker
+            {
+                private readonly int start;
+                private readonly int end;
+
+                public MethodDeclarationSyntax Method { get; set; }
+                public ClassDeclarationSyntax Class { get; set; }
+                public object Surrounding { get; internal set; }
+
+                public NodeWalker(int start, int length) : base(SyntaxWalkerDepth.StructuredTrivia)
+                {
+                    this.start = start;
+                    this.end = start + length;
+                }
+
+                public override void VisitClassDeclaration(ClassDeclarationSyntax node)
+                {
+                    if(node.Span.Start <= start && node.Span.End >= end)
+                    {
+                        if (Class != null)
+                            throw new NotImplementedException("Overlapping Class Declarations");
+
+                        Class = node;
+                    }
+                    base.VisitClassDeclaration(node);
+                }
+
+                public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
+                {
+                    if (node.Span.Start <= start && node.Span.End >= end)
+                    {
+                        if (Method != null)
+                            throw new NotImplementedException("Overlapping Class Declarations");
+
+                        Method = node;
+                    }
+                    base.VisitMethodDeclaration(node);
+                }
+            }
+
             internal static ConflictText Create(SyntaxTree tree, string text, int start, int length)
             {
+                var nodeWalker = new NodeWalker(start, length);
+                nodeWalker.Visit(tree.GetRoot());
+                var containingNode = (MemberDeclarationSyntax)nodeWalker.Method ?? nodeWalker.Class;
+                var suroundingNode = nodeWalker.Surrounding;
+            
                 return new ConflictText
                 {
                     Tree = tree,
                     Text = text.Substring(start, length),
                     Start = start,
+                    ContainingNode = containingNode,
                 };
             }
         }
