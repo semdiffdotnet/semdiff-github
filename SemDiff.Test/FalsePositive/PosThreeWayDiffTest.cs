@@ -97,6 +97,46 @@ namespace SemDiff.Test.FalsePositive
         }
 
         [TestMethod]
+        public void PosThreeWayDiffCommentAddedTest()
+        {
+            var a = @"
+                     var x = 2*4;
+                     return x;
+                     ".WrapWithMethod().Parse();
+            var l = @"
+                     var x = 2*4; //Added a Comment
+                     return x;
+                     ".WrapWithMethod().Parse();
+            var r = @"
+                     var x = 2*4; //Comment Added
+                     return x;
+                     ".WrapWithMethod().Parse();
+
+            var cons = FP.ThreeWayDiff(a, l, r);
+            var con_strs = cons.Select(c => c.ToString()).ToList();
+        }
+
+        [TestMethod]
+        public void PosThreeWayDiffCommentConflictTest()
+        {
+            var a = @"
+                     var x = 2*4; //Comment Removed
+                     return x;
+                     ".WrapWithMethod().Parse();
+            var l = @"
+                     var x = 2*4; //Comment Left
+                     return x;
+                     ".WrapWithMethod().Parse();
+            var r = @"
+                     var x = 2*4; //Comment Right
+                     return x;
+                     ".WrapWithMethod().Parse();
+
+            var cons = FP.ThreeWayDiff(a, l, r);
+            var c = cons.SingleOrDefault();
+            var con_strs = cons.Select(c => c.ToString()).ToList();
+        }
+        [TestMethod]
         public void PosThreeWayDiffNonIntersectingSpansTest()
         {
             var a = @"

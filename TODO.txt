@@ -10,3 +10,5 @@ New method for getting relevant nodes from the syntax tree:
  * Get all method declarations that overlap (or are contained) with the conflicting span
  * Get all class declarations that overlap (or are contained) with the conflicting span
  * Save the smallest trivia or syntax that covers the whole span (later we will excluse if it is entirely whitespace or a comment)
+
+Figure out how to figure out PosThreeWayDiffCommentAddedTest problem

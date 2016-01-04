@@ -214,8 +214,10 @@ namespace SemDiff
         {
             public string Text { get; set; }
             public SyntaxTree Tree { get; set; }
-            public MemberDeclarationSyntax ContainingNode { get; set; }
             public int Start { get; set; }
+            public MethodDeclarationSyntax Method { get; private set; }
+            public ClassDeclarationSyntax Class { get; private set; }
+            public object Surounding { get; private set; }
 
             public override string ToString()
             {
@@ -239,7 +241,7 @@ namespace SemDiff
 
                 public override void VisitClassDeclaration(ClassDeclarationSyntax node)
                 {
-                    if(node.Span.Start <= start && node.Span.End >= end)
+                    if(node.Span.Start <= start && node.Span.End >= end) //node contains s-e
                     {
                         if (Class != null)
                             throw new NotImplementedException("Overlapping Class Declarations");
@@ -251,7 +253,7 @@ namespace SemDiff
 
                 public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
                 {
-                    if (node.Span.Start <= start && node.Span.End >= end)
+                    if (node.Span.Start <= start && node.Span.End >= end) //node contains s-e
                     {
                         if (Method != null)
                             throw new NotImplementedException("Overlapping Class Declarations");
@@ -260,21 +262,59 @@ namespace SemDiff
                     }
                     base.VisitMethodDeclaration(node);
                 }
+
+                public override void Visit(SyntaxNode node)
+                {
+                    string str = node.ToString();
+                    if(node.Span.Start <= start && node.Span.End >= end) //node contains s-e
+                    {
+                        Surrounding = node;
+                    }
+                    base.Visit(node);
+                }
+
+                public override void VisitTrivia(SyntaxTrivia trivia)
+                {
+                    string str = trivia.ToString();
+                    if (trivia.Span.Start <= start && trivia.Span.End >= end) //node contains s-e
+                    {
+                        Surrounding = trivia;
+                    }
+                    base.VisitTrivia(trivia);
+                }
+
+                public override void VisitToken(SyntaxToken token)
+                {
+                    string str = token.ToString();
+                    if (token.Span.Start <= start && token.Span.End >= end) //node contains s-e
+                    {
+                        Surrounding = token;
+                    }
+                    base.VisitToken(token);
+                }
             }
 
             internal static ConflictText Create(SyntaxTree tree, string text, int start, int length)
             {
                 var nodeWalker = new NodeWalker(start, length);
                 nodeWalker.Visit(tree.GetRoot());
-                var containingNode = (MemberDeclarationSyntax)nodeWalker.Method ?? nodeWalker.Class;
+                var method = nodeWalker.Method;
+                var classNode = nodeWalker.Class;
                 var suroundingNode = nodeWalker.Surrounding;
-            
+
+                var txt = text.Substring(start, length);
+                var meth = method?.ToString();
+                var cls = classNode?.ToString();
+                var sur = suroundingNode?.ToString();
+
                 return new ConflictText
                 {
                     Tree = tree,
                     Text = text.Substring(start, length),
                     Start = start,
-                    ContainingNode = containingNode,
+                    Method = method,
+                    Class = classNode,
+                    Surounding = suroundingNode,
                 };
             }
         }
